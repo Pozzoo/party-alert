@@ -1,12 +1,14 @@
-import {StyleSheet, View, Text, Animated, Easing} from "react-native";
-import {useFonts} from "expo-font";
+import {StyleSheet, View, Animated, Easing, useColorScheme} from "react-native";
 import {useEffect, useState} from "react";
+import TextWithFont from "./TextWithFont";
 
 interface Props {
     character: number;
 }
 
 const CountdownUnit = ({ character }: Props) => {
+    const theme = useColorScheme();
+
     const [flipTopAnim] = useState(new Animated.Value(1));
     const [flipBottomAnim] = useState(new Animated.Value(90));
 
@@ -46,16 +48,10 @@ const CountdownUnit = ({ character }: Props) => {
         outputRange: ['0deg', '360deg'],
     });
 
-    const [fontsLoaded] = useFonts({
-        'JetBrainsMono-Regular': require('../assets/fonts/JetBrainsMono-Regular.ttf'),
-    });
-
-    if (!fontsLoaded) return null;
-
     return (
         <View style={styles.container}>
-            <View style={[styles.top, styles.common, styles.shadow]}>
-                <Text style={[styles.text, styles.textTop]}>{nextCharacter}</Text>
+            <View style={[styles.top, styles.common, styles.shadow, theme === 'dark' ? styles.topDark : null]}>
+                <TextWithFont style={[styles.text, styles.textTop, theme === 'dark' ? styles.textDark : null]}>{nextCharacter}</TextWithFont>
             </View>
 
             <Animated.View
@@ -66,14 +62,14 @@ const CountdownUnit = ({ character }: Props) => {
                             { rotateX: rotateInterpolateTop },
                             { translateY: -14 },
                         ]
-                    }
+                    }, theme === 'dark' ? styles.topDark : null
                 ]}
             >
-                <Text style={[styles.text, styles.textTop]}>{currentCharacter}</Text>
+                <TextWithFont style={[styles.text, styles.textTop, theme === 'dark' ? styles.textDark : null]}>{currentCharacter}</TextWithFont>
             </Animated.View>
 
-            <View style={[styles.bottom, styles.common, styles.shadow]}>
-                <Text style={[styles.text, styles.textBottom]}>{currentCharacter}</Text>
+            <View style={[styles.bottom, styles.common, styles.shadow, theme === 'dark' ? styles.bottomDark : null]}>
+                <TextWithFont style={[styles.text, styles.textBottom, theme === 'dark' ? styles.textDark : null]}>{currentCharacter}</TextWithFont>
             </View>
 
             <Animated.View
@@ -84,10 +80,10 @@ const CountdownUnit = ({ character }: Props) => {
                             { rotateX: rotateInterpolateBottom },
                             { translateY: 14 },
                         ]
-                    }
+                    }, theme === 'dark' ? styles.bottomDark : null
                 ]}
             >
-                <Text style={[styles.text, styles.textBottom]}>{nextCharacter}</Text>
+                <TextWithFont style={[styles.text, styles.textBottom, theme === 'dark' ? styles.textDark : null]}>{nextCharacter}</TextWithFont>
             </Animated.View>
         </View>
     );
@@ -127,6 +123,10 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 6,
     },
 
+    topDark: {
+        backgroundColor: '#3e3e5b',
+    },
+
     bottom: {
         position: 'relative',
         backgroundColor: 'white',
@@ -134,6 +134,10 @@ const styles = StyleSheet.create({
 
         borderBottomLeftRadius: 6,
         borderBottomRightRadius: 6,
+    },
+
+    bottomDark: {
+      backgroundColor: '#1e1e2f',
     },
 
     flipTop: {
@@ -153,7 +157,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         fontSize: 40,
         minHeight: 0,
-        fontFamily: 'JetBrainsMono-Regular',
+        color: '#1e1e2f'
+    },
+
+    textDark: {
+        color: '#dae2ec',
     },
 
     textTop: {

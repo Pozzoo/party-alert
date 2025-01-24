@@ -1,13 +1,17 @@
-import {View, Text, StyleSheet} from "react-native";
+import {View, StyleSheet, useColorScheme} from "react-native";
 import CountdownUnit from "./CountdownUnit";
 import {useEffect, useState} from "react";
 import {compareDates} from "../utils/dateUtils";
+import {getContrastColor} from "../utils/colourUtils";
+import TextWithFont from "./TextWithFont";
 
 interface Props {
     targetDate: Date;
+    colour: string;
 }
 
-const Countdown = ({ targetDate }: Props) => {
+const Countdown = ({ targetDate, colour }: Props) => {
+
     const [remainingMonths, setRemainingMonths] = useState<number>(0);
     const [remainingDays, setRemainingDays] = useState<number>(0);
     const [remainingHours, setRemainingHours] = useState<number>(0);
@@ -29,7 +33,7 @@ const Countdown = ({ targetDate }: Props) => {
     return (
         <View style={styles.container}>
             <View style={styles.wrapper}>
-                <Text>Months</Text>
+                <TextWithFont style={{ color: getContrastColor(colour) }}>Months</TextWithFont>
                 <View style={styles.digitWrapper}>
                     <CountdownUnit character={Math.floor(remainingMonths / 10)} />
                     <CountdownUnit character={Math.ceil(remainingMonths % 10)} />
@@ -37,7 +41,7 @@ const Countdown = ({ targetDate }: Props) => {
             </View>
 
             <View style={styles.wrapper}>
-                <Text>Days</Text>
+                <TextWithFont style={{ color: getContrastColor(colour) }}>Days</TextWithFont>
                 <View style={styles.digitWrapper}>
                     <CountdownUnit character={Math.floor(remainingDays / 10)} />
                     <CountdownUnit character={Math.ceil(remainingDays % 10)} />
@@ -45,7 +49,7 @@ const Countdown = ({ targetDate }: Props) => {
             </View>
 
             <View style={styles.wrapper}>
-                <Text>Hours</Text>
+                <TextWithFont style={{ color: getContrastColor(colour) }}>Hours</TextWithFont>
                 <View style={styles.digitWrapper}>
                     <CountdownUnit character={Math.floor(remainingHours / 10)} />
                     <CountdownUnit character={Math.ceil(remainingHours % 10)} />
@@ -53,7 +57,7 @@ const Countdown = ({ targetDate }: Props) => {
             </View>
 
             <View style={styles.wrapper}>
-                <Text>Minutes</Text>
+                <TextWithFont style={{ color: getContrastColor(colour) }}>Minutes</TextWithFont>
                 <View style={styles.digitWrapper}>
                     <CountdownUnit character={Math.floor(remainingMinutes / 10)} />
                     <CountdownUnit character={Math.ceil(remainingMinutes % 10)} />
@@ -85,10 +89,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 4,
     },
-
-    text: {
-        color: '#ccdad1',
-    }
 });
 
 export default Countdown;
