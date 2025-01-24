@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import {SafeAreaView, StyleSheet} from 'react-native';
-import CountdownUnit from "./components/CountdownUnit";
+import Countdown from "./components/Countdown";
+import {addDays, resetHours} from "./utils/dateUtils";
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style='dark' />
-      <CountdownUnit character={8}/>
+      <Countdown targetDate={resetHours(addDays(new Date("2025-03-24"), 1))} />
     </SafeAreaView>
   );
 }
