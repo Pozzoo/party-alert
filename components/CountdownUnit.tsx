@@ -10,7 +10,15 @@ const CountdownUnit = ({ character }: Props) => {
     const [flipTopAnim] = useState(new Animated.Value(1));
     const [flipBottomAnim] = useState(new Animated.Value(90));
 
+    const [currentCharacter, setCurrentCharacter] = useState(character);
+    const [nextCharacter, setNextCharacter] = useState(character);
+
     useEffect(() => {
+        setNextCharacter(character);
+
+        flipTopAnim.setValue(1);
+        flipBottomAnim.setValue(90);
+
         Animated.timing(flipTopAnim, {
             toValue: 90,
             duration: 300,
@@ -23,17 +31,19 @@ const CountdownUnit = ({ character }: Props) => {
                 useNativeDriver: true,
                 easing: Easing.out(Easing.ease),
             }).start();
+
+            setCurrentCharacter(character);
         });
     }, [character]);
 
     const rotateInterpolateTop = flipTopAnim.interpolate({
-        inputRange: [0, 360],  // Rotation from 0 to 360 degrees
-        outputRange: ['0deg', '360deg'],  // Convert to 'deg' units
+        inputRange: [0, 360],
+        outputRange: ['0deg', '360deg'],
     });
 
     const rotateInterpolateBottom = flipBottomAnim.interpolate({
-        inputRange: [0, 360],  // Rotation from 0 to 360 degrees
-        outputRange: ['0deg', '360deg'],  // Convert to 'deg' units
+        inputRange: [0, 360],
+        outputRange: ['0deg', '360deg'],
     });
 
     const [fontsLoaded] = useFonts({
@@ -45,7 +55,7 @@ const CountdownUnit = ({ character }: Props) => {
     return (
         <View style={styles.container}>
             <View style={[styles.top, styles.common, styles.shadow]}>
-                <Text style={[styles.text, styles.textTop]}>{character}</Text>
+                <Text style={[styles.text, styles.textTop]}>{nextCharacter}</Text>
             </View>
 
             <Animated.View
@@ -59,11 +69,11 @@ const CountdownUnit = ({ character }: Props) => {
                     }
                 ]}
             >
-                <Text style={[styles.text, styles.textTop]}>{character - 1}</Text>
+                <Text style={[styles.text, styles.textTop]}>{currentCharacter}</Text>
             </Animated.View>
 
             <View style={[styles.bottom, styles.common, styles.shadow]}>
-                <Text style={[styles.text, styles.textBottom]}>{character - 1}</Text>
+                <Text style={[styles.text, styles.textBottom]}>{currentCharacter}</Text>
             </View>
 
             <Animated.View
@@ -77,7 +87,7 @@ const CountdownUnit = ({ character }: Props) => {
                     }
                 ]}
             >
-                <Text style={[styles.text, styles.textBottom]}>{character}</Text>
+                <Text style={[styles.text, styles.textBottom]}>{nextCharacter}</Text>
             </Animated.View>
         </View>
     );
