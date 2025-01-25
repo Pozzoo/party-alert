@@ -48,6 +48,8 @@ export default function App() {
   }
 
   const reloadCards =() => {
+    setSelectedCard(null);
+
     loadCards().then(setCards);
   }
 
@@ -74,7 +76,7 @@ export default function App() {
             return (
                 <Pressable key={card.id} style={styles.pressableContainer} onLongPress={() => setSelectedCard(card.id!)} onPressIn={() => checkPress(card.id!)} >
                   <Animated.View style={{width: '100%', alignItems: 'center', justifyContent: 'center', transform: [{ scale: isSelected ? scaleValue : 1}]}}>
-                    <BirthdayCard id={card.id!} name={card.name} birthdate={new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2]))} colour={card.colour}/>
+                    <BirthdayCard id={card.id!} cardSelected={isSelected} refreshCards={reloadCards} name={card.name} birthdate={new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2]))} colour={card.colour}/>
                   </Animated.View>
                 </Pressable>
             )
