@@ -1,7 +1,7 @@
 import {View, StyleSheet} from "react-native";
 import CountdownUnit from "./CountdownUnit";
 import {useEffect, useState} from "react";
-import {compareDates} from "../utils/dateUtils";
+import {getDateComparisonObject} from "../utils/dateUtils";
 import {getContrastColor} from "../utils/colourUtils";
 import TextWithFont from "./TextWithFont";
 
@@ -21,7 +21,7 @@ const Countdown = ({ targetDate, colour }: Props) => {
         setInterval(() => {
             const currentDate = new Date();
 
-            const result = compareDates(targetDate, currentDate);
+            const result = getDateComparisonObject(targetDate, currentDate);
 
             setRemainingMinutes(result.minutes);
             setRemainingHours(result.hours);

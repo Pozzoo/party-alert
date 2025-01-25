@@ -1,4 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CardModel} from "../models/cardModel";
+import {compareDatesWithoutYears} from "./dateUtils";
 
 const STORAGE_KEY = 'birthday_cards';
 
@@ -17,7 +19,14 @@ export const saveCard = async (name: string, birthdate: string, colour: string) 
 export const loadCards = async () => {
     try {
         const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
-        return jsonValue ? JSON.parse(jsonValue) : [];
+        if (!jsonValue) return [];
+
+        const array = JSON.parse(jsonValue) as CardModel[];
+
+        console.log(array.sort((a: CardModel, b: CardModel) => compareDatesWithoutYears(new Date(a.birthdate.replaceAll('/', '-')), new Date(b.birthdate.replaceAll('/', '-')))));
+
+        return array.sort((a: CardModel, b: CardModel) => compareDatesWithoutYears(new Date(a.birthdate), new Date(b.birthdate)));
+
     } catch (e) {
         console.error("Error loading cards", e);
         return [];

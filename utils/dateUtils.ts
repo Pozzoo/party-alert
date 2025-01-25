@@ -50,7 +50,7 @@ export const compareMonths = (date1: Date, date2: Date) => {
     return date1.getMonth() - date2.getMonth();
 }
 
-export const compareDates = (date1: Date, date2: Date) => {
+export const getDateComparisonObject = (date1: Date, date2: Date) => {
     let minutes = compareMinutes(date1, date2);
     let hours = compareHours(date1, date2);
     let days = compareDays(date1, date2) - 1;
@@ -67,4 +67,32 @@ export const compareDates = (date1: Date, date2: Date) => {
         days: days,
         months: months,
     }
+}
+
+export const compareDatesWithoutYears = (date1: Date, date2: Date) => {
+    const now = new Date();
+
+    const remainingMonthsDate1 = compareMonths(now, date1) - 1;
+    const remainingMonthsDate2 = compareMonths(now, date2) - 1;
+
+    if (remainingMonthsDate1 < remainingMonthsDate2) {
+        return 1;
+    }
+
+    if (remainingMonthsDate1 > remainingMonthsDate2) {
+        return -1;
+    }
+
+    const remainingDaysDate1 = compareDays(now, date1) - 1;
+    const remainingDaysDate2 = compareDays(now, date2) - 1;
+
+    if (remainingDaysDate1 < remainingDaysDate2) {
+        return 1;
+    }
+
+    if (remainingDaysDate1 > remainingDaysDate2) {
+        return -1;
+    }
+
+    return 0;
 }
