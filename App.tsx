@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
+import {Animated, Pressable, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View} from 'react-native';
 import BirthdayCard from "./components/BirthdayCard";
 import {useEffect, useState} from "react";
 import {CardModel} from "./models/cardModel";
@@ -14,14 +14,48 @@ export default function App() {
   const modalManager = useModal();
 
   const [cards, setCards] = useState<CardModel[]>([]);
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [scaleValue] = useState(new Animated.Value(1));
+
+  const scaleIn = () => {
+    Animated.timing(scaleValue, {
+      toValue: 1.1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const scaleOut = () => {
+    Animated.timing(scaleValue, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      setSelectedCard(null);
+    });
+  };
+
+  const checkPress = (id: number) => {
+    if (selectedCard === id) return;
+
+    scaleOut();
+  }
 
   const onAddClick = async () => {
+    scaleOut();
+
     modalManager.openModal(<NewBirthdate reloadCards={reloadCards} />)
   }
 
   const reloadCards =() => {
     loadCards().then(setCards);
   }
+
+  useEffect(() => {
+    if (selectedCard !== null) {
+      scaleIn();
+    }
+  }, [selectedCard]);
 
   useEffect(() => {
     reloadCards();
@@ -31,13 +65,18 @@ export default function App() {
     <SafeAreaView style={[styles.container, theme === 'dark' ? styles.containerDark : null]}>
       <StatusBar />
 
-      <View style={styles.contentWrapper}>
+      <Pressable style={styles.contentWrapper} onPress={() => scaleOut()}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {cards.map((card) => {
             const dateArray = getDateObject(card.birthdate);
+            const isSelected = card.id === selectedCard;
 
             return (
-                <BirthdayCard key={card.id} id={card.id!} name={card.name} birthdate={new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2]))} colour={card.colour}/>
+                <Pressable key={card.id} style={styles.pressableContainer} onLongPress={() => setSelectedCard(card.id!)} onPressIn={() => checkPress(card.id!)} >
+                  <Animated.View style={{width: '100%', alignItems: 'center', justifyContent: 'center', transform: [{ scale: isSelected ? scaleValue : 1}]}}>
+                    <BirthdayCard id={card.id!} name={card.name} birthdate={new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2]))} colour={card.colour}/>
+                  </Animated.View>
+                </Pressable>
             )
           })}
         </ScrollView>
@@ -47,7 +86,7 @@ export default function App() {
             <TextWithFont style={styles.buttonText}>+</TextWithFont>
           </TouchableOpacity>
         </View>
-      </View>
+      </Pressable>
     </SafeAreaView>
   );
 }
@@ -104,5 +143,9 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
 
     fontSize: 40,
+  },
+
+  pressableContainer: {
+    width: '100%',
   }
 });
