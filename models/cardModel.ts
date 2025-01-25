@@ -1,5 +1,5 @@
 export interface CardModel {
-    id: number;
+    id?: number;
     name: string;
     birthdate: string;
     colour: string;

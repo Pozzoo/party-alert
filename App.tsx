@@ -3,26 +3,25 @@ import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useColorScheme,
 import BirthdayCard from "./components/BirthdayCard";
 import {useEffect, useState} from "react";
 import {CardModel} from "./models/cardModel";
-import {loadCards, saveCard} from "./utils/dataUtils";
+import {loadCards} from "./utils/dataUtils";
 import TextWithFont from "./components/TextWithFont";
+import useModal from "./hooks/useModal";
+import NewBirthdate from "./components/NewBirthdate";
+import {getDateObject} from "./utils/dateUtils";
 
 export default function App() {
   const theme = useColorScheme();
+  const modalManager = useModal();
 
   const [cards, setCards] = useState<CardModel[]>([]);
 
   const onAddClick = async () => {
-    await saveCard("Alice", "2000-05-10", "#FF5733");
-    setCards(await loadCards());
+    modalManager.openModal(<NewBirthdate />)
   }
 
   useEffect(() => {
     loadCards().then(setCards);
   }, []);
-
-  useEffect(() => {
-    console.log(cards)
-  }, [cards]);
 
   return (
     <SafeAreaView style={[styles.container, theme === 'dark' ? styles.containerDark : null]}>
@@ -30,9 +29,15 @@ export default function App() {
 
       <View style={styles.contentWrapper}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {cards.map((card) => (
-              <BirthdayCard key={card.id} id={card.id} name={card.name} birthdate={new Date(card.birthdate)} colour={card.colour} />
-          ))}
+          {cards.map((card) => {
+            const dateArray = getDateObject(card.birthdate);
+
+            console.log(new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2])))
+
+            return (
+                <BirthdayCard key={card.id} id={card.id!} name={card.name} birthdate={new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2]))} colour={card.colour}/>
+            )
+          })}
         </ScrollView>
 
         <View style={styles.buttonContainer}>

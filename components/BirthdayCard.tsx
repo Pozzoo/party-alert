@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '90%',
         padding: 15,
-        borderRadius: 14
+        borderRadius: 14,
+        marginBottom: 20
     },
 
     name: {

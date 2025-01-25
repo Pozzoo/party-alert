@@ -1,4 +1,4 @@
-import {View, StyleSheet, useColorScheme} from "react-native";
+import {View, StyleSheet} from "react-native";
 import CountdownUnit from "./CountdownUnit";
 import {useEffect, useState} from "react";
 import {compareDates} from "../utils/dateUtils";

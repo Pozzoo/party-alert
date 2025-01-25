@@ -14,6 +14,10 @@ export const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
 }
 
+export const getDateObject = (date: string) => {
+    return(date.split("/"));
+}
+
 export const compareMinutes = (date1: Date, date2: Date) => {
     if (date1.getMinutes() < date2.getMinutes()) {
         return (60 + date1.getMinutes()) - date2.getMinutes();
@@ -50,7 +54,7 @@ export const compareDates = (date1: Date, date2: Date) => {
     let minutes = compareMinutes(date1, date2);
     let hours = compareHours(date1, date2);
     let days = compareDays(date1, date2) - 1;
-    let months = compareMonths(date1, date2);
+    let months = compareMonths(date1, date2) - 1;
 
     if (days < 0) {
         days = getDaysInMonth(date2.getFullYear(), date2.getMonth()) - 1;
