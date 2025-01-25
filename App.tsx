@@ -16,11 +16,15 @@ export default function App() {
   const [cards, setCards] = useState<CardModel[]>([]);
 
   const onAddClick = async () => {
-    modalManager.openModal(<NewBirthdate />)
+    modalManager.openModal(<NewBirthdate reloadCards={reloadCards} />)
+  }
+
+  const reloadCards =() => {
+    loadCards().then(setCards);
   }
 
   useEffect(() => {
-    loadCards().then(setCards);
+    reloadCards();
   }, []);
 
   return (
@@ -31,8 +35,6 @@ export default function App() {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {cards.map((card) => {
             const dateArray = getDateObject(card.birthdate);
-
-            console.log(new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2])))
 
             return (
                 <BirthdayCard key={card.id} id={card.id!} name={card.name} birthdate={new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2]))} colour={card.colour}/>

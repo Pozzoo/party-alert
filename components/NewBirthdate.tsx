@@ -9,7 +9,11 @@ const colours = [
     "#007FFF", "#32CD32", "#FF69B4", "#FF4500", "#FFD300", "#00FFFF", "#9400D3", "#FF77FF", "#98FF98", "#87CEEB", "#FF6F61", "#8A2BE2"
 ]
 
-const NewBirthdate = () => {
+interface Props {
+    reloadCards?: () => void
+}
+
+const NewBirthdate = ({ reloadCards }: Props) => {
     const modalManager = useModal();
 
     const [formData, setFormData] = useState<CardModel>({
@@ -55,9 +59,13 @@ const NewBirthdate = () => {
             return; //TODO: ADD ERROR MESSAGE
         }
 
-        saveCard(formData.name, formData.birthdate, formData.colour).then(() => modalManager.closeModal());
+        saveCard(formData.name, formData.birthdate, formData.colour).then(() => {
+            if (reloadCards) {
+                reloadCards();
+            }
 
-
+            modalManager.closeModal();
+        });
     }
 
     return (
